@@ -1,21 +1,43 @@
 import db from "/KING'S GAMBIT BACKEND/db.js";
 
+const assignRandomRoles = () => {
+    const roles = ["Chancellor", "Royal Guard", "Jester", "Assassin"];
+    const bots = ["Player 2", "Player 3", "Player 4", "Player 5"];
+  
+    // Shuffle roles array to randomly assign roles to bots
+    for (let i = roles.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [roles[i], roles[j]] = [roles[j], roles[i]]; // Swap elements
+    }
+  
+    // Create the roles array with the player being the King and bots being the other roles
+    const assignedRoles = [
+      { name: "King", controlledBy: "Player", status: "alive" }
+    ];
+  
+    // Assign the remaining roles to bots
+    bots.forEach((bot, index) => {
+      assignedRoles.push({
+        name: roles[index],
+        controlledBy: bot,
+        status: "alive"
+      });
+    });
+  
+    return assignedRoles;
+  };
+
 // Function to start a new game
 export const startGame = (req, res) => {
   const { playerName } = req.body;
-
+  // Randomly assign roles to the player and bots
+  const roles = assignRandomRoles();
   // Initial game state in JSON
   const initialGameState = {
-      phase: "day",
-      roles: [
-          { name: "King", controlledBy: "Player", status: "alive" },
-          { name: "Chancellor", controlledBy: "AI", status: "alive" },
-          { name: "Royal Guard", controlledBy: "AI", status: "alive" },
-          { name: "Jester", controlledBy: "AI", status: "alive" },
-          { name: "Assassin", controlledBy: "AI", status: "alive" }
-      ],
-      eliminated: []
-  };
+    phase: "day",
+    roles: roles,
+    eliminated: []
+};
 
   const query = `
       INSERT INTO single_player_games (player_name, player_role, game_state)
