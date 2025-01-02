@@ -5,7 +5,7 @@ import http from "http";
 import userRouter from "./routes/userRouter.js";
 import accountRouter from "./routes/accountRouter.js";
 import gameRouter from "./routes/gameRouter.js";
-import socketServer from "./socketServer.js"; // Import the socket server
+import socketServer from "./socketServer.js"; 
 
 dotenv.config();
 
